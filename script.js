@@ -9,28 +9,28 @@ function encrypt() {
         return;
     }
 
-    // خريطة استبدال الحروف لتشفير مرئي (زخرفة برمجية)
-    const map = {
-        'ا': 'آ', 'أ': 'آ', 'إ': 'إ', 'ب': 'بּ', 'ت': 'تּ', 'ث': 'ثּ', 'ج': 'جـ', 
-        'ح': 'حـ', 'خ': 'خـ', 'د': 'دّ', 'ذ': 'ذّ', 'ر': 'رّ', 'ز': 'زّ', 'س': 'سּ', 
-        'ش': 'شּ', 'ص': 'صּ', 'ض': 'ضּ', 'ط': 'طּ', 'ظ': 'ظּ', 'ع': 'عـ', 'غ': 'غـ', 
-        'ف': 'فּ', 'ق': 'قּ', 'ك': 'كּ', 'ل': 'لּ', 'م': 'مּ', 'ن': 'نּ', 'ه': 'هـ', 
-        'و': 'وّ', 'ي': 'يּ', 'ة': 'ةּ', 'ى': 'ىּ',
-        'a': 'α', 'e': 'є', 'i': 'Ꭵ', 'o': 'ο', 'u': 'υ', 's': 'ѕ', 'k': 'к', 'n': 'η'
+    // خريطة حروف بديلة تشبه الأصلية 100% لكنها برمجياً مختلفة
+    const simpleMap = {
+        'ا': 'ﺍ', 'ه': 'ﻫ', 'و': 'ﻭ', 'ي': 'ﻲ', 'ل': 'ﻞ',
+        'a': 'а', 'e': 'е', 'o': 'ο', 'p': 'р', 'c': 'с'
     };
 
-    let encryptedText = "";
-    for (let char of input) {
-        // استبدال الحرف إذا كان موجوداً في الخريطة، وإلا نضعه كما هو مع رمز مخفي
-        encryptedText += (map[char] || char) + '\u200B';
-    }
+    let lines = input.split('\n');
+    let processedLines = lines.map(line => {
+        // إذا كان السطر يحتوي على رابط، اتركه كما هو تماماً
+        if (line.includes('http') || line.includes('discord.gg') || line.includes('.com')) {
+            return line;
+        }
 
-    // تشفير الروابط بوضع رموز تفصل بين النقطة والدومين
-    encryptedText = encryptedText.replace(/\./g, " ﹒ ");
+        // تشفير مرئي بسيط للأسطر العادية
+        return line.split('').map(char => {
+            return simpleMap[char] || char;
+        }).join('\u200B'); // إضافة رمز مخفي أيضاً لزيادة الأمان
+    });
 
-    output.innerText = encryptedText;
+    output.innerText = processedLines.join('\n');
     status.style.color = "#10b981";
-    status.innerText = "✅ تم التشفير المرئي بنجاح!";
+    status.innerText = "✅ تم التشفير المرئي البسيط!";
 }
 
 function copyResult() {
