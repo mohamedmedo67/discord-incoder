@@ -4,25 +4,45 @@ function encrypt() {
     const output = document.getElementById('outputText');
 
     if (!input) {
-        status.innerText = "❌ الرجاء كتابة نص أولاً!";
+        status.style.color = "#ef4444";
+        status.innerText = "⚠️ فضلاً اكتب الإعلان أولاً";
         return;
     }
 
-    // تقنية التشفير: إضافة رمز غير مرئي بين كل حرف وحرف
-    // هذا الرمز (\u200b) لا يظهر للعين لكن يكسر قراءة البوتات للنص
-    let encrypted = input.split('').join('\u200b');
+    // خريطة استبدال الحروف لتشفير مرئي (زخرفة برمجية)
+    const map = {
+        'ا': 'آ', 'أ': 'آ', 'إ': 'إ', 'ب': 'بּ', 'ت': 'تּ', 'ث': 'ثּ', 'ج': 'جـ', 
+        'ح': 'حـ', 'خ': 'خـ', 'د': 'دّ', 'ذ': 'ذّ', 'ر': 'رّ', 'ز': 'زّ', 'س': 'سּ', 
+        'ش': 'شּ', 'ص': 'صּ', 'ض': 'ضּ', 'ط': 'طּ', 'ظ': 'ظּ', 'ع': 'عـ', 'غ': 'غـ', 
+        'ف': 'فּ', 'ق': 'قּ', 'ك': 'كּ', 'ل': 'لּ', 'م': 'مּ', 'ن': 'نּ', 'ه': 'هـ', 
+        'و': 'وّ', 'ي': 'يּ', 'ة': 'ةּ', 'ى': 'ىּ',
+        'a': 'α', 'e': 'є', 'i': 'Ꭵ', 'o': 'ο', 'u': 'υ', 's': 'ѕ', 'k': 'к', 'n': 'η'
+    };
 
-    // تشفير الروابط بشكل خاص (تغيير النقاط لرموز مشابهة)
-    encrypted = encrypted.replace(/\./g, " ﹒ ");
+    let encryptedText = "";
+    for (let char of input) {
+        // استبدال الحرف إذا كان موجوداً في الخريطة، وإلا نضعه كما هو مع رمز مخفي
+        encryptedText += (map[char] || char) + '\u200B';
+    }
 
-    output.innerText = encrypted;
-    status.innerText = "✅ تم التشفير بنجاح!";
+    // تشفير الروابط بوضع رموز تفصل بين النقطة والدومين
+    encryptedText = encryptedText.replace(/\./g, " ﹒ ");
+
+    output.innerText = encryptedText;
+    status.style.color = "#10b981";
+    status.innerText = "✅ تم التشفير المرئي بنجاح!";
 }
 
 function copyResult() {
     const result = document.getElementById('outputText').innerText;
     if (result === "النتيجة ستظهر هنا...") return;
 
-    navigator.clipboard.writeText(result);
-    document.getElementById('status').innerText = "📋 تم النسخ للحافظة!";
+    const textArea = document.createElement("textarea");
+    textArea.value = result;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
+    
+    document.getElementById('status').innerText = "📋 تم النسخ بنجاح!";
 }
