@@ -9,28 +9,28 @@ function encrypt() {
         return;
     }
 
-    // خريطة حروف بديلة تشبه الأصلية 100% لكنها برمجياً مختلفة
+    // خريطة حروف "مرئية" بسيطة جداً (بتغير شكل الحرف بس بيفضل مفهوم)
     const simpleMap = {
-        'ا': 'ﺍ', 'ه': 'ﻫ', 'و': 'ﻭ', 'ي': 'ﻲ', 'ل': 'ﻞ',
-        'a': 'а', 'e': 'е', 'o': 'ο', 'p': 'р', 'c': 'с'
+        'ا': 'آ', 'أ': 'آ', 'إ': 'إ', 'ه': 'هـ', 'و': 'وُ', 'ي': 'يـ',
+        'a': 'а', 'e': 'е', 'o': 'ο', 'i': 'і', 's': 'ѕ'
     };
 
     let lines = input.split('\n');
     let processedLines = lines.map(line => {
-        // إذا كان السطر يحتوي على رابط، اتركه كما هو تماماً
-        if (line.includes('http') || line.includes('discord.gg') || line.includes('.com')) {
+        // لو السطر فيه رابط، سيبه زي ما هو تماماً
+        if (line.includes('http') || line.includes('discord.gg')) {
             return line;
         }
 
-        // تشفير مرئي بسيط للأسطر العادية
+        // تشفير مرئي بسيط للكلمات العادية
         return line.split('').map(char => {
             return simpleMap[char] || char;
-        }).join('\u200B'); // إضافة رمز مخفي أيضاً لزيادة الأمان
+        }).join('\u200B'); // رمز مخفي بين الحروف لزيادة الأمان
     });
 
     output.innerText = processedLines.join('\n');
     status.style.color = "#10b981";
-    status.innerText = "✅ تم التشفير المرئي البسيط!";
+    status.innerText = "✅ تم التحديث: تشفير مرئي بسيط + روابط سليمة";
 }
 
 function copyResult() {
