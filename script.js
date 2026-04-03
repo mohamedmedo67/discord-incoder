@@ -9,28 +9,42 @@ function encrypt() {
         return;
     }
 
-    // خريطة حروف "مرئية" بسيطة جداً (بتغير شكل الحرف بس بيفضل مفهوم)
-    const simpleMap = {
-        'ا': 'آ', 'أ': 'آ', 'إ': 'إ', 'ه': 'هـ', 'و': 'وُ', 'ي': 'يـ',
-        'a': 'а', 'e': 'е', 'o': 'ο', 'i': 'і', 's': 'ѕ'
+    // خريطة التشفير العنيف المرئي (على طريقة الصور)
+    const aggressiveMap = {
+        'ا': 'ﺍ', 'ب': 'بـ', 'ت': 't', 'ث': 'ثـ', 'ج': 'جـ', 'ح': 'حـ', 'خ': 'خـ',
+        'د': 'ﺩ', 'ذ': 'ﺫ', 'ر': 'ـر', 'ز': 'ـز', 'س': 'سـ', 'ش': 'شـ', 'ص': 'صـ',
+        'ض': 'ضـ', 'ط': 'طـ', 'ظ': 'ظـ', 'ع': 'عـ', 'غ': 'غـ', 'ف': 'f', 'ق': 'قـ',
+        'ك': 'k', 'ل': 'ـل', 'م': 'ـم', 'ن': 'نـ', 'ه': 'ﻫ', 'و': 'ﻭ', 'ي': 'ﻲ',
+        'ة': '9', 'ى': 'ى', 'لا': 'ﻻ', ' ': ' ',
+        '.': '_', ',': '/', ' ': '   ' // مسافات أكبر بين الكلمات
     };
 
     let lines = input.split('\n');
     let processedLines = lines.map(line => {
-        // لو السطر فيه رابط، سيبه زي ما هو تماماً
-        if (line.includes('http') || line.includes('discord.gg')) {
+        // إذا كان السطر يحتوي على رابط (http أو discord.gg)، اتركه كما هو تماماً
+        if (line.includes('http') || line.includes('discord.gg') || line.includes('uri')) {
             return line;
         }
 
-        // تشفير مرئي بسيط للكلمات العادية
-        return line.split('').map(char => {
-            return simpleMap[char] || char;
-        }).join('\u200B'); // رمز مخفي بين الحروف لزيادة الأمان
+        // تشفير عنيف مرئي للكلمات العادية
+        let encryptedLine = line.split('').map(char => {
+            // استبدال الحرف أو الرمز من الخريطة العنيفة
+            return aggressiveMap[char] || char;
+        }).join('\u200B'); // إضافة الرمز المخفي لمضاعفة الأمان
+
+        // إضافة رموز تقطيع إضافية بين الحروف لكسر الكلمات تماماً
+        return encryptedLine.split('\u200B').join('\u200B//\u200B');
     });
 
-    output.innerText = processedLines.join('\n');
+    let result = processedLines.join('\n');
+
+    // تأمين الرموز الخاصة مثل @ و # لتجنب الإشارة العشوائية
+    result = result.replace(/@/g, '@\u200B');
+    result = result.replace(/#/g, '#\u200B');
+
+    output.innerText = result;
     status.style.color = "#10b981";
-    status.innerText = "✅ تم التحديث: تشفير مرئي بسيط + روابط سليمة";
+    status.innerText = "✅ تم التشفير العنيف (الروابط سليمة)!";
 }
 
 function copyResult() {
